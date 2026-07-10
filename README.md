@@ -1,37 +1,58 @@
-# DV Course Studio — Releases
+# DV Course Studio
 
-Signed release artifacts and the auto-updater manifest for **DV Course Studio**, a
-local-first desktop course studio for Windows (Tauri 2 + React 19).
+**Design, build, and ship interactive online courses — with AI agents doing the heavy lifting.**
 
-> This repository holds **published build artifacts only** — the application source lives
-> in a separate, private repository. Releases here are produced by the project's release
-> pipeline (see `RELEASING.md` in the app repo).
+DV Course Studio is a local-first desktop app (Windows) for producing rich, interactive
+learning experiences. You plan an academy and its courses, and the studio helps you turn
+each chapter into self-contained, interactive HTML "experiences" — complete with voice
+narration, imagery, and a consistent visual theme. Work stays on your machine and syncs to
+the cloud per course, so it can also appear in the companion web app.
 
-## Download & install
+> ⬇️ **[Download the latest installer →](../../releases/latest)**
+> &nbsp;•&nbsp; `DV.Course.Studio_<version>_x64-setup.exe` (Windows)
 
-Get the latest installer from the **[Releases](../../releases/latest)** page:
+---
 
-- `DV.Course.Studio_<version>_x64-setup.exe` — Windows (NSIS) installer
+## What it does
 
-Run it to install. WebView2 is fetched automatically if it isn't already present.
+- **AI-assisted authoring, end to end.** Generate an academy strategy, courses, book
+  structure, chapters, and interactive experiences — then refine them with guided prompts.
+- **40+ interactive experience types.** Each experience is built as self-contained HTML
+  (data → presentation → behavior) with a knowledge checklist, screens, and I18N support.
+- **Two build engines, one set of conventions.**
+  - *Direct API* — the studio calls AI services to generate content step by step.
+  - *Local coding agent* — delegate a whole course to an embedded terminal running a coding
+    agent (**Claude Code** or **Antigravity**), which autonomously builds and QAs each
+    experience while you watch.
+- **Voice & visuals.** Per-experience narration (TTS) and generated imagery, tied into a
+  **visual theme system** (10 built-in themes + custom).
+- **Local-first, cloud-optional.** Every course is either **Synced** (cloud-canonical via
+  the web app, cross-device) or **Local-only** (private, offline). Content-hash
+  last-writer-wins sync, an offline queue, and an agent-run lock keep things consistent.
+- **Signed auto-updates.** New versions download and verify against a baked-in public key
+  before installing (fail-closed).
 
-## Auto-updates
+## Install
 
-The app checks this repo for updates via the [Tauri updater](https://v2.tauri.app/plugin/updater/).
-Every release includes three assets:
+1. Download `DV.Course.Studio_<version>_x64-setup.exe` from the
+   **[latest release](../../releases/latest)**.
+2. Run it. WebView2 is fetched automatically if it isn't already present.
+3. On first launch, pick a workspace folder and connect an agent (or continue without one).
+
+## Updates
+
+The app polls this repository at **`releases/latest/download/latest.json`** and compares
+its `version` to the running version; a newer, signature-verified build installs itself.
+Each release ships three assets:
 
 | Asset | Purpose |
 |-------|---------|
-| `*_x64-setup.exe` | The installer / update payload |
-| `*_x64-setup.exe.sig` | Detached minisign signature of the installer |
-| `latest.json` | The update manifest the app polls |
+| `*_x64-setup.exe` | Installer / update payload |
+| `*_x64-setup.exe.sig` | Detached minisign signature |
+| `latest.json` | Update manifest the app polls |
 
-The app polls **`releases/latest/download/latest.json`** and compares its `version` field
-to the running version. A newer version is downloaded and its signature verified against a
-minisign **public key baked into the app** — anything that doesn't verify is rejected
-(fail-closed). The private signing key never appears in this repository.
-
-### `latest.json` shape
+<details>
+<summary><code>latest.json</code> shape</summary>
 
 ```json
 {
@@ -46,10 +67,10 @@ minisign **public key baked into the app** — anything that doesn't verify is r
   }
 }
 ```
+</details>
 
-## Publishing a new version
+---
 
-Bump the version, build + sign the installer, and publish it together with an updated
-`latest.json` under a new `v<version>` tag. The full procedure — including the
-empty-password signing gotcha and the CI options — is documented in `RELEASING.md` in the
-application repository.
+*This repository distributes **build artifacts only** — the application source is
+maintained privately. Releases are produced by the project's release pipeline
+(`RELEASING.md` in the app repo).*
